@@ -15,8 +15,27 @@ void uart_init() {
   sel &= ~(7 << 15);
   sel |= (4 << 15);
   *GPFSEL1 = sel;
-  *IBRD = 1;
-  *FBRD = 40;
+  *IBRD = 26;
+  *FBRD = 3;
   *LCRH = (3 << 5);
   *CR = (1 << 0) | (1 << 8) | (1 << 9);
+}
+
+void uart_putc(char c) {
+  while (*FR & (1 << 5))
+    ;
+  *DR = c;
+}
+
+char uart_getc() {
+  while (*FR & (1 << 4))
+    ;
+  return (char)*DR;
+}
+
+void uart_puts(char *s) {
+  while (*s != '\0') {
+    uart_putc(*s);
+    s++;
+  }
 }

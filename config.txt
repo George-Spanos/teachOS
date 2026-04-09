@@ -1,0 +1,2 @@
+dtoverlay=disable-bt
+init_uart_clock=48000000
