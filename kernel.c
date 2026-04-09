@@ -5,7 +5,7 @@ void main() {
   uart_init();
   
   // LOGGING
-  // uart_puts("Mantalakia\n");
+  uart_puts("Mantalakia\n");
 
 
   // READ AND PRINT LOOP
@@ -16,5 +16,5 @@ void main() {
   // }
 
   framebuffer_init();
-  draw_string(100, 100, "Hello Kostakis Kailas", 0x00FFFFFF);
+  // draw_string(100, 100, "Hello Kostakis Kailas", 0x00FFFFFF);
 }
