@@ -16,5 +16,5 @@ void main() {
   // }
 
   framebuffer_init();
-  draw_rect(100, 100, 200, 150, 0x00FF0000);  // κόκκινο ορθογώνιο:w
+  draw_string(100, 100, "Hello Kostakis Kailas", 0x00FFFFFF);
 }

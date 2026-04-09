@@ -5,7 +5,7 @@ OUTPUT_DIR = build
 C_FILES = $(wildcard *.c)
 C_OBJECTS = $(patsubst %.c,$(OUTPUT_DIR)/%.o,$(C_FILES))
 
-all: $(OUTPUT_DIR)/kernel.img
+all: clean $(OUTPUT_DIR)/kernel.img
 
 $(OUTPUT_DIR):
 	mkdir -p $(OUTPUT_DIR)
