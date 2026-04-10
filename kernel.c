@@ -1,9 +1,10 @@
 #include "uart.h"
 #include "framebuffer.h"
+#include "timer.h"
 
 void main() {
   uart_init();
-  
+  timer_init();
   // LOGGING
   uart_puts("Mantalakia\n");
 
