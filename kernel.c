@@ -1,5 +1,5 @@
 #include "uart.h"
-#include "mailbox.h"
+#include "framebuffer.h"
 
 void main() {
   uart_init();
