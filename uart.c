@@ -1,10 +1,10 @@
+#include "gpio.h"
 volatile unsigned int *DR = (unsigned int *)0x20201000;
 volatile unsigned int *FR = (unsigned int *)0x20201018;
 volatile unsigned int *IBRD = (unsigned int *)0x20201024;
 volatile unsigned int *FBRD = (unsigned int *)0x20201028;
 volatile unsigned int *LCRH = (unsigned int *)0x2020102c;
 volatile unsigned int *CR = (unsigned int *)0x20201030;
-volatile unsigned int *GPFSEL1 = (unsigned int *)0x20200004;
 
 void uart_init() {
   *CR = 0x0;
