@@ -1,3 +1,4 @@
+// Mailbox is the channel for framebuffer communication - rendering via GPU in RPI0
 volatile unsigned int *READ = (unsigned int *)0x2000B880;
 volatile unsigned int *STATUS = (unsigned int *)0x2000B898;
 volatile unsigned int *WRITE = (unsigned int *)0x2000B8A0;

@@ -1,3 +1,4 @@
+// IRQ interrupts timer initialization
 #include "timer.h"
 
 volatile unsigned int *CS = (unsigned int *)0x20003000;

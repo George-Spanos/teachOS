@@ -1,3 +1,6 @@
+/*
+Cooperative and pre emptive scheduler implementations based on IRQ interrupts.
+*/
 #include "scheduler.h"
 #include "timer.h"
 #include "uart.h"
