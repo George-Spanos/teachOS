@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "scheduler.h"
 #include "uart.h"
+#include "error.h"
 
 int on = 0;
 
@@ -38,7 +39,7 @@ void main() {
 
   // framebuffer_init();
   // draw_string(100, 100, "Hello Kostakis Kailas", 0x00FFFFFF);
-  scheduler_create_task(task_a);
-  scheduler_create_task(task_b);
+  error_t r = scheduler_create_task(task_a);
+  r = scheduler_create_task(task_b);
   scheduler_start();
 }

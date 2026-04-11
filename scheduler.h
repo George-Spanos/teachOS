@@ -2,7 +2,7 @@
 
 #define SCHEDULER_H
 #include <stdint.h>
-
+#include "error.h"
 // assembly function for context switching. Mandatory for working with CPU registers.
 extern void context_switch(uint32_t *old_context, uint32_t *new_context);
 extern void context_load(uint32_t *context);
@@ -10,7 +10,7 @@ extern void context_load(uint32_t *context);
 uint32_t* schedule();
 void yield();
 void scheduler_start();
-int scheduler_create_task(void (*handler)());
+error_t scheduler_create_task(void (*handler)());
 typedef enum {
   TASK_UNUSED,
   TASK_READY,

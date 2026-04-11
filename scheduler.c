@@ -1,11 +1,12 @@
 /*
 Cooperative and pre emptive scheduler implementations based on IRQ interrupts.
 */
+#include <stddef.h>
+#include <stdint.h>
 #include "scheduler.h"
 #include "timer.h"
 #include "uart.h"
-#include <stddef.h>
-#include <stdint.h>
+#include "error.h"
 
 #define MAX_TASKS 4
 #define STACK_SIZE 256
@@ -14,7 +15,7 @@ task_t tasks[MAX_TASKS];
 int current_task_idx = 0;
 uint32_t stacks[MAX_TASKS][STACK_SIZE];
 
-int scheduler_create_task(void (*handler)()) {
+error_t scheduler_create_task(void (*handler)()) {
   for (int i = 0; i < MAX_TASKS; i++) {
     if (tasks[i].state == TASK_UNUSED) {
       tasks[i].state = TASK_READY;
@@ -23,10 +24,10 @@ int scheduler_create_task(void (*handler)()) {
       tasks[i].context[13] = (uint32_t)&stacks[i][STACK_SIZE - 1];
       tasks[i].context[15] = (uint32_t)handler;
       tasks[i].context[16] = 0x13;
-      return 0;
+      return SUCCESS;
     }
   }
-  return -1;
+  return  CREATE_TASK_ERROR;
 }
 
 task_t *find_next_task() {

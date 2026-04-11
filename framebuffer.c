@@ -1,8 +1,8 @@
 #include "mailbox.h"
-
+#include "error.h"
 unsigned int *framebuffer;
 
-void framebuffer_init() {
+error_t framebuffer_init() {
   mailbox_buffer[0] = 35 * 4;     // μέγεθος buffer σε bytes
   mailbox_buffer[1] = 0x00000000; // request
 
@@ -36,6 +36,10 @@ void framebuffer_init() {
   // End tag
   mailbox_buffer[21] = 0x00000000;
 
-  mailbox_call((unsigned int)mailbox_buffer, 8);
+  error_t  r = mailbox_call((unsigned int)mailbox_buffer, 8);
+  if(r == MAILBOX_INIT_ERROR) {
+    return r;
+  }
   framebuffer = (unsigned int *)(mailbox_buffer[19] & 0x3FFFFFFF);
+  return SUCCESS;
 }
