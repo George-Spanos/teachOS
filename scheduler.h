@@ -6,6 +6,8 @@
 // assembly function for context switching. Mandatory for working with CPU registers.
 extern void context_switch(uint32_t *old_context, uint32_t *new_context);
 extern void context_load(uint32_t *context);
+
+uint32_t* schedule();
 void yield();
 void scheduler_start();
 int scheduler_create_task(void (*handler)());
@@ -18,7 +20,7 @@ typedef enum {
 
 typedef struct {
   task_state_t state;
-  uint32_t context[10];
+  uint32_t context[17];
   void (*handler)();
   uint32_t* stack;
 } task_t;

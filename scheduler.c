@@ -1,4 +1,7 @@
 #include "scheduler.h"
+#include "timer.h"
+#include "uart.h"
+#include <stddef.h>
 #include <stdint.h>
 
 #define MAX_TASKS 4
@@ -14,15 +17,17 @@ int scheduler_create_task(void (*handler)()) {
       tasks[i].state = TASK_READY;
       tasks[i].handler = handler;
       tasks[i].stack = stacks[i];
-      tasks[i].context[9] = (uint32_t)handler;
-      tasks[i].context[8] = (uint32_t)&stacks[i][STACK_SIZE - 1];
+      tasks[i].context[13] = (uint32_t)&stacks[i][STACK_SIZE - 1];
+      tasks[i].context[15] = (uint32_t)handler;
+      tasks[i].context[16] = 0x13;
       return 0;
     }
   }
   return -1;
 }
 
-void yield() {
+task_t *find_next_task() {
+
   int i = (current_task_idx + 1) % MAX_TASKS;
   int n = 0;
   task_t *next_task = &tasks[i];
@@ -33,16 +38,29 @@ void yield() {
     next_task = &tasks[i];
   }
   if (n == MAX_TASKS)
-    return;
+    return NULL;
   tasks[current_task_idx].state = TASK_READY;
   next_task->state = TASK_RUNNING;
-  uint32_t *old_context = tasks[current_task_idx].context;
   current_task_idx = i;
-  context_switch(old_context, next_task->context);
-}
-void scheduler_start() {
-    tasks[0].state = TASK_RUNNING;
-    current_task_idx = 0;
-    context_load(tasks[0].context);
+  return next_task;
 }
 
+uint32_t* schedule() {
+  if (*CS & (1 << 1)) {
+    uart_puts("SCHEDULE");
+    *CS = (1 << 1);
+    *C1 = *CLO + INTERVAL;
+    task_t *next_task = find_next_task();
+    if (next_task != NULL) {
+      return next_task->context;
+    }
+    return NULL;
+  }
+  return NULL;
+}
+
+void scheduler_start() {
+  tasks[0].state = TASK_RUNNING;
+  current_task_idx = 0;
+  context_load(tasks[0].context);
+}

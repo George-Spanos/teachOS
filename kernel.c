@@ -1,3 +1,4 @@
+#include "timer.h"
 #include "gpio.h"
 #include "scheduler.h"
 #include "uart.h"
@@ -17,25 +18,23 @@ void toggle_led() {
 void task_a() {
   while (1) {
     uart_puts("Task A\n");
-    yield();
   }
 }
 
 void task_b() {
   while (1) {
     uart_puts("Task B\n");
-    yield();
   }
 }
 void main() {
   uart_init();
   // LOGGING
   uart_puts("UART INIT\n");
+  timer_init();
   // int r = gpio_set_output(17);
   // if (r) {
   //   uart_puts("GPIO OUTPUT SET 17");
   // }
-  // timer_init(toggle_led);
 
   // framebuffer_init();
   // draw_string(100, 100, "Hello Kostakis Kailas", 0x00FFFFFF);
