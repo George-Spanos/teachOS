@@ -13,11 +13,14 @@ $(OUTPUT_DIR):
 $(OUTPUT_DIR)/boot.o: boot.s | $(OUTPUT_DIR)
 	$(CROSS)as -mcpu=$(CPU) -o $@ boot.s
 
+$(OUTPUT_DIR)/context_switch.o: context_switch.s | $(OUTPUT_DIR)
+	$(CROSS)as -mcpu=$(CPU) -o $@ context_switch.s
+
 $(OUTPUT_DIR)/%.o: %.c | $(OUTPUT_DIR)
 	$(CROSS)gcc -mcpu=$(CPU) -ffreestanding -nostdlib -c $< -o $@
 
-$(OUTPUT_DIR)/kernel.elf: $(OUTPUT_DIR)/boot.o $(C_OBJECTS) linker.ld
-	$(CROSS)ld -T linker.ld -o $@ $(OUTPUT_DIR)/boot.o $(C_OBJECTS)
+$(OUTPUT_DIR)/kernel.elf: $(OUTPUT_DIR)/boot.o $(OUTPUT_DIR)/context_switch.o $(C_OBJECTS) linker.ld
+	$(CROSS)ld -T linker.ld -o $@ $(OUTPUT_DIR)/boot.o -o $@ $(OUTPUT_DIR)/context_switch.o $(C_OBJECTS)
 
 $(OUTPUT_DIR)/kernel.img: $(OUTPUT_DIR)/kernel.elf
 	$(CROSS)objcopy $< -O binary $@
