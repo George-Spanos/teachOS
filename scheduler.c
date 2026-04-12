@@ -51,7 +51,6 @@ task_t *find_next_task() {
 
 uint32_t* schedule() {
   if (*CS & (1 << 1)) {
-    uart_puts("SCHEDULE");
     *CS = (1 << 1);
     *C1 = *CLO + INTERVAL;
     task_t *next_task = find_next_task();
