@@ -47,19 +47,19 @@ copy_loop:
     BL main
     B .
 irq_handler:
-    @ Βήμα 1: Σώσε r0, CPSR, pc στο IRQ stack
+    @ Step 1: Save r0, CPSR, pc to the IRQ stack
     SUB lr, lr, #4
-    STMFD sp!, {r0-r3, lr}      @ σώσε r0-r3 και pc στο IRQ stack
-    MRS r0, SPSR                @ r0 = CPSR του task
-    MOV r1, sp                  @ r1 = διεύθυνση IRQ stack
+    STMFD sp!, {r0-r3, lr}      @ save r0-r3 and pc to the IRQ stack
+    MRS r0, SPSR                @ r0 = CPSR of the task
+    MOV r1, sp                  @ r1 = IRQ stack address
 
-    @ Βήμα 2: Άλλαξε σε SVC mode (IRQs off)
+    @ Step 2: Switch to SVC mode (IRQs off)
     MRS r2, cpsr
     BIC r2, r2, #0x1F
     ORR r2, r2, #0x93
     MSR cpsr_c, r2
 
-    @ βρες που βρίσκεται το context του running task
+    @ find where the running task's context is located
     LDR r2, =current_task_idx
     LDR r2, [r2]
     MOV r3, #80
@@ -67,7 +67,7 @@ irq_handler:
     LDR r3, =tasks
     ADD r3, r3, r2
     ADD r3, r3, #4              @ r3 = &context[0]
-    @ σώσε τα τωρινά registers στο context
+    @ save the current registers to the context
     STR r4,  [r3, #16]
     STR r5,  [r3, #20]
     STR r6,  [r3, #24]
@@ -79,8 +79,8 @@ irq_handler:
     STR r12, [r3, #48]
     STR sp,  [r3, #52]          @ context[13] = sp
     STR lr,  [r3, #56]          @ context[14] = lr
-    STR r0,  [r3, #64]          @ context[16] = CPSR (ήταν στο r0)
-    @ μετέφερε τιμές από το irq stack στο context
+    STR r0,  [r3, #64]          @ context[16] = CPSR (was in r0)
+    @ transfer values from the IRQ stack to the context
     LDR r4, [r1]
     STR r4, [r3, #0]            @ context[0] = r0
     LDR r4, [r1, #4]
@@ -104,17 +104,17 @@ restore_current:
     ADD r0, r1, r0
     ADD r0, r0, #4              @ r0 = &context[0]
 load_context:
-    @ r0 = &context[0] του νέου task
+    @ r0 = &context[0] of the new task
 
-    @ Φόρτωσε sp, lr
+    @ Load sp, lr
     LDR sp,  [r0, #52]
     LDR lr,  [r0, #56]
 
-    @ Σώσε τον saved pc στο stack του νέου task (θα τον χρειαστούμε στο τέλος)
+    @ Save the saved pc to the new task's stack (we'll need it at the end)
     LDR r1,  [r0, #60]
     STMFD sp!, {r1}
 
-    @ Φόρτωσε r4-r12
+    @ Load r4-r12
     LDR r4,  [r0, #16]
     LDR r5,  [r0, #20]
     LDR r6,  [r0, #24]
@@ -125,18 +125,18 @@ load_context:
     LDR r11, [r0, #44]
     LDR r12, [r0, #48]
 
-    @ Φόρτωσε r1-r3 (r0 ακόμα κρατάει τη βάση)
+    @ Load r1-r3 (r0 still holds the base)
     LDR r1,  [r0, #4]
     LDR r2,  [r0, #8]
     LDR r3,  [r0, #12]
 
-    @ Φόρτωσε r0 τελευταίο — μετά χάνεις τη βάση
+    @ Load r0 last — after this you lose the base
     LDR r0,  [r0, #0]
 
-    @ Ενεργοποίησε IRQs (SVC mode, bit 7 = 0)
+    @ Enable IRQs (SVC mode, bit 7 = 0)
     MSR cpsr_c, #0x13
 
-    @ Πήδα στον saved pc
+    @ Jump to the saved pc
     LDMFD sp!, {pc}
 
 hang:

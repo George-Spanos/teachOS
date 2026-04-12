@@ -1,10 +1,10 @@
 #ifndef FONT_H
 #define FONT_H
 
-// 8x8 bitmap font - καλύπτει ASCII 32 (space) έως 126 (~)
-// Κάθε χαρακτήρας = 8 bytes, κάθε byte = 1 γραμμή pixels
+// 8x8 bitmap font - covers ASCII 32 (space) to 126 (~)
+// Each character = 8 bytes, each byte = 1 row of pixels
 unsigned char font[128][8] = {
-    // 0-31: control characters (κενά)
+    // 0-31: control characters (empty)
     [0 ... 31] = {0,0,0,0,0,0,0,0},
 
     // 32: space

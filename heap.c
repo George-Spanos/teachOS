@@ -39,8 +39,8 @@ header_t *split_mem_block(header_t *header, uint32_t size) {
   second_block->status = FREE;
   return first_block;
 }
-// όταν ελευθερώνουμε code blocks τότε υπάρχει η περίπτωση να αποκτήσουμε διαδοχικά free blocks
-// η παρακάτω function τα mergάρει
+// when we free code blocks there is a chance we end up with consecutive free blocks
+// the following function merges them
 void coalesce() {
   header_t *h1 = find_next_header(NULL);
   header_t *h2 = find_next_header(h1);
