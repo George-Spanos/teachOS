@@ -5,7 +5,8 @@ typedef enum {
   SUCCESS,
   MAILBOX_INIT_ERROR,
   FRAMEBUFFER_INIT_ERROR,
-  CREATE_TASK_ERROR
+  CREATE_TASK_ERROR,
+  V3D_INIT_ERROR
 } error_t;
 
 char* error_to_string(error_t error_code);

@@ -9,6 +9,8 @@ char* error_to_string(error_t error_code) {
       return "FRAMEBUFFER INIT ERROR";
     case CREATE_TASK_ERROR:
       return "CREATE TASK ERROR";
+    case V3D_INIT_ERROR:
+      return "V3D_INIT_ERROR";
     default:
       return "UNKNOWN ERROR CODE";
   }

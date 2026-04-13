@@ -73,7 +73,7 @@ void print_heap_block(header_t *header) {
   uart_puts(uint_to_dec(header->size));
   uart_puts(" status=");
   uart_puts(heap_status_to_str(header->status));
-  uart_puts("\n");
+  uart_puts("\n\r");
 }
 
 void heap_dump() {
